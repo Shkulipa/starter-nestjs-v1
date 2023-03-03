@@ -7,9 +7,9 @@ export class ErrorDto {
   statusCode: string;
 
   @ApiProperty({
-    type: [String],
+    type: String,
   })
-  message: string[];
+  message: string;
 
   @ApiProperty({
     type: String,

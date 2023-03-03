@@ -7,6 +7,7 @@ import {
   UseGuards,
   Get,
   Param,
+  UseFilters,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -17,7 +18,9 @@ import {
   ApiCreatedResponse,
 } from '@nestjs/swagger/dist/decorators';
 import { ErrorDto } from 'src/common/dto/error.dto';
+import { AllExceptionFilter } from 'src/exception/allExceptionFilter';
 
+@UseFilters(new AllExceptionFilter())
 @Controller('/auth')
 export class UserController {
   constructor(private readonly userService: UserService) {}

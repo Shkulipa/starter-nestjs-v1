@@ -9,6 +9,7 @@ import { mailerConfig } from 'src/configs/app/mailer.config';
 import { Module } from '@nestjs/common/decorators/modules/module.decorator';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CountryModule } from '../country/country.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AppService } from './app.service';
     MongooseModule.forRootAsync(mongooseConfig),
     MailerModule.forRootAsync(mailerConfig),
     UserModule,
+    CountryModule,
   ],
   controllers: [AppController],
   providers: [AppService, MongoConnection],

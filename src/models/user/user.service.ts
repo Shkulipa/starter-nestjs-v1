@@ -1,4 +1,12 @@
-import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { compare } from 'bcrypt';
@@ -34,15 +42,9 @@ export class UserService {
         username: createUserDto.username,
       });
       if (userByEmail)
-        throw new HttpException(
-          'Email already been taken',
-          HttpStatus.NOT_FOUND,
-        );
+        throw new BadRequestException('Email already been taken');
       if (userByUsername)
-        throw new HttpException(
-          'Username already been taken',
-          HttpStatus.NOT_FOUND,
-        );
+        throw new BadRequestException('Username already been taken');
 
       const activationId = uuidv4();
       const createUser = await this.userModel.create({
@@ -90,15 +92,12 @@ export class UserService {
         .findOne()
         .or([{ username }, { email: username }])
         .select(['-activationId']);
-      if (!user)
-        throw new HttpException('User wasn\t found', HttpStatus.NOT_FOUND);
+      if (!user) throw new NotFoundException('User wasn\t found');
 
-      if (user.isBlock)
-        throw new HttpException('User is blocked', HttpStatus.FORBIDDEN);
+      if (user.isBlock) throw new ForbiddenException('User is blocked');
 
       const isEqualPassword = await compare(password, user.password);
-      if (!isEqualPassword)
-        throw new HttpException('Password incorrect', HttpStatus.UNAUTHORIZED);
+      if (!isEqualPassword) throw new BadRequestException('Password incorrect');
 
       const userData = { ...omit(user.toObject(), ['password', 'isBlock']) };
       const tokens = this.jwtService.createTokens({ _id: userData._id });
