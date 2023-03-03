@@ -65,7 +65,7 @@ migrate:local:status (for local DB)
 ...
 ```
 
-for seeds are using "seeds.js", and follow commands:
+for seeds are using "seeds.ts", and follow commands:
 ```
 seeds:prod:status (for prod DB)
 seeds:dev:status (for dev DB)
