@@ -1,0 +1,27 @@
+version: '3.1'
+
+services:
+  mongo:
+    image: mongo
+    restart: always
+    volumes:
+      - mongodb-data:/data/db
+    ports:
+      - '27018:27017'
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    volumes:
+      - mongodb-data:/data/db
+    depends_on:
+      - mongo
+    ports:
+      - 8081:8081
+    environment:
+      # имя контейнера на 4 строке
+      - ME_CONFIG_MONGODB_SERVER=mongo
+      - ME_CONFIG_MONGODB_PORT=27017
+
+volumes:
+    mongodb-data:
